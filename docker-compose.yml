@@ -1,0 +1,20 @@
+services:
+  url_shortener:
+    build: ./app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      CONFIG_PATH: ../../config/pgsql.yaml
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: url_shortener

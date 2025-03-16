@@ -1,0 +1,6 @@
+storage_type: "memdb"
+http_server:
+  address: "0.0.0.0:8080"
+  read_timeout: 10s
+  write_timeout: 20s
+  idle_timeout: 60s

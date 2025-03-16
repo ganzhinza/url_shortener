@@ -2,24 +2,24 @@ package memdb
 
 import (
 	"sync"
-	"url_shortener/pkg/urlGenerator"
+	"url_shortener/pkg/urlgenerator"
 )
 
 type URLStorage struct {
 	urlsize     uint
 	longToShort map[string]string
 	shortToLong map[string]string
-	mu          *sync.RWMutex
+	mu          *sync.Mutex
 }
 
 func NewURLStorage(urlsize uint) *URLStorage {
 	longToShort := make(map[string]string)
 	shortToLong := make(map[string]string)
-	return &URLStorage{urlsize: urlsize, longToShort: longToShort, shortToLong: shortToLong, mu: &sync.RWMutex{}}
+	return &URLStorage{urlsize: urlsize, longToShort: longToShort, shortToLong: shortToLong, mu: &sync.Mutex{}}
 }
 
 func (s *URLStorage) AddURL(url string) string {
-	shortURL := urlGenerator.Generate(s.urlsize)
+	shortURL := urlgenerator.Generate(s.urlsize)
 	s.mu.Lock()
 	if s.longToShort[url] != "" {
 		return s.longToShort[url] //race
@@ -35,14 +35,10 @@ func (s *URLStorage) AddURL(url string) string {
 }
 
 func (s *URLStorage) GetOriginal(url string) string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
 	return s.shortToLong[url]
 }
 
 func (s *URLStorage) GetShort(url string) string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
 	return s.longToShort[url]
 }
 

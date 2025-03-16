@@ -2,8 +2,7 @@ package pgsql
 
 import (
 	"context"
-	"fmt"
-	"url_shortener/pkg/urlGenerator"
+	"url_shortener/pkg/urlgenerator"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v5"
@@ -25,7 +24,6 @@ func (db *DB) URLSize() uint {
 func (db *DB) MakeShort(url string) (string, error) {
 	short, err := db.getShort(url)
 	if err != nil {
-		fmt.Println("get short")
 		return "", err
 	}
 
@@ -34,14 +32,13 @@ func (db *DB) MakeShort(url string) (string, error) {
 	}
 	short, err = db.addShort(url)
 	if err != nil {
-		fmt.Println("add short")
 		return "", err
 	}
 	return short, nil
 }
 
 func (db *DB) addShort(url string) (string, error) {
-	short := urlGenerator.Generate(db.urlsize)
+	short := urlgenerator.Generate(db.urlsize)
 	_, err := db.pool.Exec(context.Background(), `INSERT INTO urls (original, short) VALUES ($1, $2)`, url, short)
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {

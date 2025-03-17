@@ -14,7 +14,7 @@ var api *API
 const urlsize = 10
 
 func TestMain(m *testing.M) {
-	api = New(memdb.NewDB(urlsize))
+	api = New("", memdb.NewDB(urlsize))
 
 	m.Run()
 }
@@ -33,7 +33,7 @@ func TestAPI_saveURL(t *testing.T) {
 	if rr.Code != http.StatusOK {
 		t.Errorf("Error, got: %d, want: %d", rr.Code, http.StatusOK)
 	}
-	if len(rr.Body.String()) != urlsize {
+	if len(rr.Body.String()) != urlsize+len(api.hostname)+1 {
 		t.Errorf("Wrong ans len got: %d, want %d", len(rr.Body.String()), urlsize)
 	}
 
@@ -55,7 +55,7 @@ func TestAPI_getLongURL(t *testing.T) {
 	//get short url
 	short := rr.Body.String()
 
-	req = httptest.NewRequest(http.MethodGet, "/"+short, nil)
+	req = httptest.NewRequest(http.MethodGet, short, nil)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr = httptest.NewRecorder()

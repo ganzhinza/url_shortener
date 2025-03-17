@@ -1,4 +1,5 @@
 storage_type: "pgsql"
+host_name: "https://host"
 http_server:
   address: "0.0.0.0:8080"
   read_timeout: 10s

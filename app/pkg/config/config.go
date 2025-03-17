@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	StorageType string `yaml:"storage_type" env-required:"true"`
+	HostName    string `yaml:"host_name" env-required:"true"`
 	HTTPServer  `yaml:"http_server"`
 }
 

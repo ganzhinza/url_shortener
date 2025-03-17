@@ -28,11 +28,11 @@ func main() {
 	cfg := config.MustLoad()
 	switch cfg.StorageType {
 	case "memdb":
-		srv.api = api.New(memdb.NewDB(URLSIZE))
+		srv.api = api.New(cfg.HostName, memdb.NewDB(URLSIZE))
 	case "pgsql":
 		pool := InitializePostgres()
 		defer pool.Close()
-		srv.api = api.New(pgsql.New(pool, URLSIZE))
+		srv.api = api.New(cfg.HostName, pgsql.New(pool, URLSIZE))
 	}
 
 	srv.httpServer = &http.Server{

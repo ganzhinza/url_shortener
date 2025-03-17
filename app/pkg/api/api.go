@@ -8,12 +8,13 @@ import (
 )
 
 type API struct {
-	router *mux.Router
-	DB     db.Interface
+	hostname string
+	router   *mux.Router
+	DB       db.Interface
 }
 
-func New(db db.Interface) *API {
-	api := API{router: mux.NewRouter(), DB: db}
+func New(hostname string, db db.Interface) *API {
+	api := API{hostname: hostname, router: mux.NewRouter(), DB: db}
 	api.endpoints()
 	return &api
 }
@@ -39,7 +40,7 @@ func (api *API) saveURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte(shortURL))
+	w.Write([]byte(api.hostname + "/" + shortURL))
 }
 
 func (api *API) getLongURL(w http.ResponseWriter, r *http.Request) {

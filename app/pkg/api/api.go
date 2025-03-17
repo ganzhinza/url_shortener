@@ -24,7 +24,7 @@ func (api *API) Router() *mux.Router {
 
 func (api *API) endpoints() {
 	api.router.HandleFunc("/", api.saveURL).Methods(http.MethodPost)
-	api.router.HandleFunc("/", api.getLongURL).Methods(http.MethodGet)
+	api.router.HandleFunc("/{shortURL}", api.getLongURL).Methods(http.MethodGet)
 }
 
 func (api *API) saveURL(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +43,7 @@ func (api *API) saveURL(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) getLongURL(w http.ResponseWriter, r *http.Request) {
-	shortURL := r.URL.Query().Get("shortURL")
+	shortURL := mux.Vars(r)["shortURL"]
 	if len(shortURL) != int(api.DB.URLSize()) {
 		http.Error(w, "Wrong short url", http.StatusBadRequest)
 		return

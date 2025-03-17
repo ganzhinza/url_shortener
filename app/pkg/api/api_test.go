@@ -55,10 +55,7 @@ func TestAPI_getLongURL(t *testing.T) {
 	//get short url
 	short := rr.Body.String()
 
-	queryParams := url.Values{}
-	queryParams.Set("shortURL", short)
-
-	req = httptest.NewRequest(http.MethodGet, "/?"+queryParams.Encode(), nil)
+	req = httptest.NewRequest(http.MethodGet, "/"+short, nil)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr = httptest.NewRecorder()
